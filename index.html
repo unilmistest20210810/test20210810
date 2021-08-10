@@ -31,28 +31,29 @@
       delay: 1500,
       action: {
         placeholder : "選択してください",  // 選択前に表示するメッセージ
-        searchselect : true, // Default: true, false for standart dropdown
-        label : 'text', // dropdown label variable
+        searchselect : true,
+        label : 'text',
         options : [
-                      {value: "sousa", text : "セルフサービスポータルの基本操作" },
-                      {value: "touroku", text : "お問い合わせか申請か分からない" },
+                      {value: "operation", text : "セルフサービスポータルの基本操作" }, //選択リストの値を入力
+                      {value: "whichApp", text : "お問い合わせか申請か分からない" },
                       {value: "user", text : "ユーザ情報の変更" },
-                      {value: "sonota", text : "その他" },
+                      {value: "others", text : "その他" },
         ],
-        button: {
+        button: { //選択リストに表示するボタン
           icon: 'check',
           label: 'OK'
         }
       }
     }).then(function(res){
       botui.action.hide();
-      switch (res.value) {
-        case 'sousa': showSousa(); break;
-        case 'touroku': showTouroku(); break;
+      switch (res.value) { //選択した値によって分岐
+        case 'operation': caseOperation(); break;
+        case 'whichApp': caseWhichApp(); break;
+        case 'user': caseUser(); break;
       }
     });
 
-    function showSousa(){
+    function caseOperation(){ //「セルフサービスポータルの基本操作」を選択
       botui.message.add({
         delay: 1500,
         content: 'セルフサービスポータルの基本操作ですね。'
@@ -64,7 +65,7 @@
       }).then();
     }
 
-    function showTouroku(){
+    function caseWhichApp(){ //「お問い合わせか申請か分からない」を選択
       botui.message.add({
         delay: 1500,
         content: 'お問い合わせや申請の登録方法ですね。'
@@ -75,16 +76,16 @@
         });
       }).then(function(){
         return botui.action.select({
-          delay: 1500,  //メッセージの表示タイミングをずらす
+          delay: 1500,
           action: {
             placeholder : "選択してください", 
-            searchselect : true, // Default: true, false for standart dropdown
-            label : 'text', // dropdown label variable
+            searchselect : true,
+            label : 'text',
             options : [
-                      {value: "pcriyou", text : "PCの利用・変更申請をしたい" },
-                      {value: "akaunto", text : "社内システムのアカウント発行" },
-                      {value: "toraburu", text : "PCの修理・トラブル" },
-                      {value: "sonota2", text : "その他" },
+                      {value: "PCApp", text : "PCの利用・変更申請" },
+                      {value: "accIssuance", text : "社内システムのアカウント発行" },
+                      {value: "repairTrouble", text : "PCの修理・トラブル" },
+                      {value: "others2", text : "その他" },
               ],
             button: {
               icon: 'check',
@@ -94,6 +95,21 @@
         });
       });
     }
+
+    function caseUser(){ //「ユーザ情報の変更」を選択
+      botui.message.add({
+        delay: 1500,
+        content: 'ユーザ情報の変更ですね。'
+      }).then(function() {
+        return botui.message.add({
+          delay: 1500,
+          content: '画面右上の「ユーザ」アイコンよりユーザ情報を編集できます。'
+        });
+      }).then();
+    }
+
+
+
   </script>
 </body>
 </html>
