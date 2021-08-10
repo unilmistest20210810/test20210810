@@ -18,41 +18,45 @@
   <script>
     var botui = new BotUI('ssp-bot');
 
+    // 初期メッセージ
     botui.message.add({
       content: 'こんにちは！' // 表示するメッセージ
-    });
+    }).then(showQuestions);
     
-    botui.message.add({
-      delay: 1500,  //メッセージの表示タイミングをずらす
-      content: 'セルフサービスポータルのことでお困りですか？'
-    });
+    // 質問の選択肢を表示
+    function showQuestions() {
+      botui.message.add({
+        delay: 1500,  //メッセージの表示タイミングをずらす
+        content: 'セルフサービスポータルのことでお困りですか？'
+      });
 
-    botui.action.select({ // 選択リストを表示
-      delay: 1500,
-      action: {
-        placeholder : "選択してください",  // 選択前に表示するメッセージ
-        searchselect : true,
-        label : 'text',
-        options : [
-                      {value: "operation", text : "セルフサービスポータルの基本操作" }, //選択リストの値を入力
-                      {value: "whichApp", text : "お問い合わせか申請か分からない" },
-                      {value: "user", text : "ユーザ情報の変更" },
-                      {value: "others", text : "その他" },
-        ],
-        button: { //選択リストに表示するボタン
-          icon: 'check',
-          label: 'OK'
+      botui.action.select({ // 選択リストを表示
+        delay: 1500,
+        action: {
+          placeholder : "選択してください",  // 選択前に表示するメッセージ
+          searchselect : true,
+          label : 'text',
+          options : [
+                        {value: "operation", text : "セルフサービスポータルの基本操作" }, //選択リストの値を入力
+                        {value: "whichApp", text : "お問い合わせか申請か分からない" },
+                        {value: "user", text : "ユーザ情報の変更" },
+                        {value: "others", text : "その他" },
+          ],
+          button: { //選択リストに表示するボタン
+            icon: 'check',
+            label: 'OK'
+          }
         }
-      }
-    }).then(function(res){
-      botui.action.hide();
-      switch (res.value) { //選択した値によって分岐
-        case 'operation': caseOperation(); break;
-        case 'whichApp': caseWhichApp(); break;
-        case 'user': caseUser(); break;
-        case 'others': caseOthers(); break;
-      }
-    });
+      }).then(function(res){
+        botui.action.hide();
+        switch (res.value) { //選択した値によって分岐
+          case 'operation': caseOperation(); break;
+          case 'whichApp': caseWhichApp(); break;
+          case 'user': caseUser(); break;
+          case 'others': caseOthers(); break;
+        }
+      });
+    }
 
     function caseOperation(){ //「セルフサービスポータルの基本操作」を選択
       botui.message.add({
@@ -63,7 +67,7 @@
           delay: 1500,
           content: 'セルフサービスポータルのマニュアルは 　[こちら](https://lmisoc.com/lmisoc/manual/ssp/2406448.html)^を参照してください'
         });
-      }).then();
+      }).then(askEnd);
     }
 
     function caseWhichApp(){ //「お問い合わせか申請か分からない」を選択
@@ -94,7 +98,29 @@
             }
           }
         });
-      });
+      }).then(function(res){
+        botui.action.hide();
+        switch (res.value) { //選択した値によって分岐
+          case 'PCApp': caseApp(); break;
+          case 'accIssuance': caseApp(); break;
+          case 'repairTrouble': caseInquiry(); break;
+          case 'others2': caseInquiry(); break;
+        }
+      }).then(askEnd);
+    }
+
+    function caseApp(){ //「PCの利用・変更申請」「社内システムのアカウント発行」を選択
+      botui.message.add({
+        delay: 1500,
+        content: 'こちらは申請タブから登録をお願いします。' // 表示するメッセージ
+      }).then(askEnd);
+    }
+
+    function caseInquiry(){ //「PCの修理・トラブル」「その他」を選択
+      botui.message.add({
+        delay: 1500,
+        content: 'こちらはお問い合わせタブから登録をお願いします。' // 表示するメッセージ
+      }).then(askEnd);
     }
 
     function caseUser(){ //「ユーザ情報の変更」を選択
@@ -106,15 +132,41 @@
           delay: 1500,
           content: '画面右上の「ユーザ」アイコンよりユーザ情報を編集できます。'
         });
-      }).then();
+      }).then(askEnd);
     }
 
     function caseOthers(){ //「その他」を選択
       botui.message.add({
+        delay: 1500,
         content: 'セルフサービスポータルについての問い合わせは「xxxxx」までお願いいたします。' // 表示するメッセージ
-      });
+      }).then(askEnd);
     }
 
+    // チャットを終わりにするか質問
+    function askEnd(){
+      botui.message.add({
+        delay: 1500,
+        content: '他に質問はありますか？'
+      }).then(function() {
+        // ボタンを提示する．
+        return botui.action.button({
+          delay: 1500,
+          action: [
+            {icon: 'circle-o', text: 'はい', value: true},
+            {icon: 'close', text: 'いいえ', value: false}]
+        });
+      }).then(function(res) {
+        res.value ? showQuestions() : end();
+      });
+    } 
+
+    //チャットを終了する
+    function end(){
+      botui.message.add({
+        delay: 1500,
+        content: 'ありがとうございました。ウィンドウを閉じて終了してください。'
+      });
+    }
   </script>
 </body>
 </html>
