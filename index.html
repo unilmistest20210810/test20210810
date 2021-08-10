@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>sample4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css" />
+</head>
+<style>
+</style>
+<body>
+  <div class="botui-app-container" id="ssp-bot">
+    <bot-ui　text-align:right></bot-ui>
+  </div>
+  <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.js"></script>
+  <script>
+    var botui = new BotUI('ssp-bot');
+
+    botui.message.add({
+      content: 'こんにちは！'
+    });
+    
+    botui.message.add({
+      delay: 1500,  //メッセージの表示タイミングをずらす
+      content: 'セルフサービスポータルのことでお困りですか？'
+    });
+
+    //ドロップダウン表示
+    botui.action.select({
+      delay: 1500,  //メッセージの表示タイミングをずらす
+      action: {
+        placeholder : "選択してください", 
+        searchselect : true, // Default: true, false for standart dropdown
+        label : 'text', // dropdown label variable
+        options : [
+                      {value: "sousa", text : "セルフサービスポータルの基本操作" },
+                      {value: "touroku", text : "お問い合わせか申請か分からない" },
+                      {value: "user", text : "ユーザ情報の変更" },
+                      {value: "sonota", text : "その他" },
+        ],
+        button: {
+          icon: 'check',
+          label: 'OK'
+        }
+      }
+    }).then(function(res){
+      botui.action.hide();
+      switch (res.value) {
+        case 'sousa': showSousa(); break;
+        case 'touroku': showTouroku(); break;
+      }
+    });
+
+    function showSousa(){
+      botui.message.add({
+        delay: 1500,
+        content: 'セルフサービスポータルの基本操作ですね。'
+      }).then(function() {
+        return botui.message.add({
+          delay: 1500,
+          content: 'セルフサービスポータルのマニュアルは 　[こちら](https://lmisoc.com/lmisoc/manual/ssp/2406448.html)^を参照してください'
+        });
+      }).then();
+    }
+
+    function showTouroku(){
+      botui.message.add({
+        delay: 1500,
+        content: 'お問い合わせや申請の登録方法ですね。'
+      }).then(function() {
+        return botui.message.add({
+          delay: 1500,
+          content: 'どのような内容か選択してください。'
+        });
+      }).then(function(){
+        return botui.action.select({
+          delay: 1500,  //メッセージの表示タイミングをずらす
+          action: {
+            placeholder : "選択してください", 
+            searchselect : true, // Default: true, false for standart dropdown
+            label : 'text', // dropdown label variable
+            options : [
+                      {value: "pcriyou", text : "PCの利用・変更申請をしたい" },
+                      {value: "akaunto", text : "社内システムのアカウント発行" },
+                      {value: "toraburu", text : "PCの修理・トラブル" },
+                      {value: "sonota2", text : "その他" },
+              ],
+            button: {
+              icon: 'check',
+              label: 'OK'
+            }
+          }
+        });
+      });
+    }
+
+    /*
+    botui.message.bot({
+      content: 'これはLMISの紹介動画です！'
+    }).then(function() {
+      botui.message.bot({
+        //埋め込み用のYouTubeコンテンツを表示する
+        type: 'embed',
+        content: 'https://www.youtube.com/embed/9k0WIttNv7c'
+      });  
+    });
+
+    botui.action.button({
+      action: [{
+       icon: 'check',  //FontAwesomeのアイコン名を指定
+        text: '了解',
+        value: true
+      }, {
+        icon: 'cog',
+        text: '設定',
+        value: 'setting'
+      }, {
+        icon: 'search',
+        text: '検索',
+        value: 'search'
+      }]
+    });
+
+    /*
+    botui.message.add({
+      type: 'html', // this is 'text' by default
+      content: 'これは <b>HTMLが使える</b>.'
+    });
+
+    /*
+    botui.message.add({
+      delay: 3000,
+      loading: true,
+      content: '「…」が表示されてからメッセージが表示される'
+    });
+    
+    //入力フィールド表示
+    botui.action.text({
+      action: {
+        placeholder: '入力フィールド表示'
+      }
+    }).then(function (res) { // will be called when it is submitted.
+      console.log(res.value); // will print whatever was typed in the field.
+    });
+
+    //ボタン表示
+    botui.action.button({
+      action: [
+        { // show only one button
+          text: 'One',
+          value: 'one'
+        }
+      ]
+    }).then(function (res) { // will be called when a button is clicked.
+      console.log(res.value); // will print "one" from 'value'
+    });
+
+    //ドロップダウン表示
+    botui.action.select({
+      action: {
+        placeholder : "言語を選択してください", 
+        value: 'JP', // Selected value or selected object. Example: {value: "TR", text : "Türkçe" }
+        searchselect : true, // Default: true, false for standart dropdown
+        label : 'text', // dropdown label variable
+        options : [
+                      {value: "EN", text : "English" },
+                      {value: "ES", text : "Español" },
+                      {value: "JP", text : "日本語" },
+                      {value: "DE", text : "Deutsch" },
+                      {value: "FR", text : "Français" },
+                      {value: "IT", text : "Italiano" },
+        ],
+        button: {
+          icon: 'check',
+          label: 'OK'
+        }
+      }
+    }).then(function (res) { // will be called when a button is clicked.
+      console.log(res.value); // will print "one" from 'value'
+    });
+
+    //複数選択
+    botui.action.select({
+      action: {
+        placeholder : "Select Language", 
+        value: 'JP,EN', // Selected value or Selected Array object. Example: [{value: "TR", text : "Türkçe" },{value: "EN", text : "English" }]
+        multipleselect : true, // Default: false
+        options : [
+                      {value: "EN", text : "English" },
+                      {value: "ES", text : "Español" },
+                      {value: "JP", text : "日本語" },
+                      {value: "DE", text : "Deutsch" },
+                      {value: "FR", text : "Français" },
+                      {value: "IT", text : "Italiano" },
+        ],
+        button: {
+          icon: 'check',
+          label: 'OK'
+        }
+      }
+    }).then(function (res) { // will be called when a button is clicked.
+      console.log(res.value); // will print "one" from 'value'
+    });
+
+    //メールアドレスを入力させる
+    botui.action.text({
+      action: {
+        sub_type: 'email',
+        placeholder: 'Enter your text here'
+      }
+    });
+
+    botui.action.button({
+      autoHide: false,
+      action: [
+        {
+          text: 'One',
+          value: 'one'
+        }
+      ]
+    }).then(function (res) { // will be called when a button is clicked.
+      botui.action.hide(); // hide the button whenever you want.
+    });
+
+    botui.action.text({
+      addMessage: false,
+      action: {
+        placeholder: 'Your name'
+      }
+    }).then(function (res) { // will be called when a button is clicked.
+      botui.message.add({
+        human: true, // show it as right aligned to UI
+        content: 'My name is ' + res.value
+      });
+    });
+    
+    botui.message.add({
+      content: 'セルフサービスポータルのマニュアルは [こちら](https://www.google.com/?hl=ja)^'
+    });
+
+    botui.action.button({
+      action: [
+        {
+          icon: 'check',
+          text: 'Continue',
+          value: 'continue'
+        }
+      ]
+    })
+
+    botui.message.add({
+      content: 'Tracking your package ...'
+    }).then(function (index) { // index of added message
+    // do some stuff here from server, etc.
+
+    // let's update the previous message
+
+    // call the `update` method and pass the `index` we got from Promise.
+    botui.message.update(index, {
+      content: 'Here is the location..'
+    });
+  });
+*/
+  </script>
+
+</body>
+</html>
