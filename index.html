@@ -50,7 +50,7 @@
         case 'operation': caseOperation(); break;
         case 'whichApp': caseWhichApp(); break;
         case 'user': caseUser(); break;
-        case 'others': caseAthers(); break;
+        case 'others': caseOthers(); break;
       }
     });
 
@@ -109,14 +109,11 @@
       }).then();
     }
 
-    function caseAthers(){ //「その他」を選択
+    function caseOthers(){ //「その他」を選択
       botui.message.add({
-        delay: 1500,
-        content: 'セルフサービスポータルについての問い合わせは「xxxxx」までお願いいたします。'
-      })
+        content: 'セルフサービスポータルについての問い合わせは「xxxxx」までお願いいたします。' // 表示するメッセージ
+      });
     }
-
-
 
   </script>
 </body>
