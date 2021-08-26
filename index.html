@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <title>SSPbot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css" />
+  <link rel="stylesheet" href="https://unpkg.com/botui/build/botui.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/botui/build/botui-theme-default.css" />
 </head>
 <style>
 </style>
@@ -13,8 +13,8 @@
   <div class="botui-app-container" id="ssp-bot">
     <bot-ui　text-align:right></bot-ui>
   </div>
-  <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.js"></script>
+  <script src="https://cdn.jsdelivr.net/vue/2.0.5/vue.min.js"></script>
+  <script src="https://unpkg.com/botui/build/botui.js"></script>
   <script>
     var botui = new BotUI('ssp-bot');
 
@@ -24,8 +24,8 @@
      * content: 表示するメッセージ
      */
     botui.message.add({
-      photo: 'https://unilmistest20210810.github.io/test20210810/robot.png',
-      content: 'こんにちは！'
+      photo: 'https://raw.githubusercontent.com/unilmistest20210810/test20210810/main/robot.png',
+      content: 'こんにちは'
     }).then(showQuestions);
     
 
@@ -78,7 +78,7 @@
       }).then(function() {
         return botui.message.add({
           delay: 1000,
-          content: 'セルフサービスポータルのマニュアルは 　[こちら](https://lmisoc.com/lmisoc/manual/ssp/2406448.html)^を参照してください'
+          content: 'SSPのマニュアルは<br/><a href="https://lmisoc.com/lmisoc/" target="_blank" rel="noopener noreferrer">こちら</a>を参照してください。'
         });
       }).then(askEnd);
     }
